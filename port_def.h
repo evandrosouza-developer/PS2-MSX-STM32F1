@@ -23,11 +23,12 @@ extern "C" {
 #define X0_port							GPIOB
 #define X0_pin_id						GPIO12
 #define Y3_port							GPIOA
-#define Y3_pin_id						GPIO11
-#define Y3_exti							EXTI11
-#define Y2_port							GPIOA
-#define Y2_pin_id						GPIO10
-#define Y2_exti							EXTI10
+#define Y3_pin_id						GPIO12		//port A10 (Y2) broken
+#define Y3_exti							EXTI12
+#define Y2_port							GPIOA		//port A10 (Y2) broken
+//#define Y2_pin_id						GPIO10		//port A10 (Y2) broken
+#define Y2_pin_id						GPIO11		//port A10 (Y2) broken
+#define Y2_exti							EXTI4
 #define Y1_port							GPIOA
 #define Y1_pin_id						GPIO9
 #define Y1_exti							EXTI9
@@ -47,21 +48,19 @@ extern "C" {
 
 #define ps2_data_pin_port		GPIOB
 #define ps2_data_pin_id			GPIO7
-#define ps2_clock_pin_port	GPIOB
-#define ps2_clock_pin_id		GPIO4	//Sometimes, PA15 don't "want" to obbey the order to set, so PS/2 enters in locking
-#define ps2_clock_pin_exti	EXTI4
+#define ps2_clock_pin_port	GPIOA
+#define ps2_clock_pin_id		GPIO15
 #define ps2_power_ctr_port	GPIOB	
-#define ps2_power_ctr_pin		GPIO0	
+#define ps2_power_ctr_pin		GPIO1	
 
 
 //Para debug
 #define SYSTICK_port				GPIOA
 #define SYSTICK_pin_id			GPIO0
-#define INT_TIM2_port				GPIOA
 #define TIM2CC1_pin_id			GPIO1
 #define BIT0_pin_port				GPIOA
 #define BIT0_pin_id					GPIO4
-#define FLASH_RW_port				GPIOA
+#define INT_TIM2_port				GPIOA
 #define TIM2UIF_pin_id			GPIO5
 #define Dbg_Yint_port				GPIOA
 #define Dbg_Yint0e1_pin_id	GPIO6
