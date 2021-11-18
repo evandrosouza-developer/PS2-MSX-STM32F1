@@ -48,8 +48,6 @@ void tim2_setup(void)
 	//Configuring PA15 as input and Alternate function of T2C1
 	gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO15);	//Default config
 
-	//gpio_primary_remap(AFIO_MAPR_TIM2_REMAP_PARTIAL_REMAP1, 0);
-
 	/* Reset TIM2 peripheral to defaults. */
 	rcc_periph_reset_pulse(RST_TIM2);
 
@@ -195,15 +193,15 @@ void prepares_capture(uint32_t timer_peripheral)
 	//11: CC1 channel is configured as input, IC1 is mapped on TRC. This mode is working only if
 	//an internal trigger input is selected through TS bit (TIMx_SMCR register)
 	//Note: CC1S bits are writable only when the channel is OFF (CC1E = 0 in TIMx_CCER)
-	TIM_CCER(TIM2) = 0;//To zero TIM_CCER_CC1E and prepair to select active input
-	TIM_CCMR1(TIM2) = TIM_CCMR1_CC1S_IN_TI1;
+	TIM_CCER(timer_peripheral) = 0;//To zero TIM_CCER_CC1E and prepair to select active input
+	TIM_CCMR1(timer_peripheral) = TIM_CCMR1_CC1S_IN_TI1;
 	//. Select the edge of the active transition on the TI1 channel by writing the CC1P bit to 1
 	//in the TIMx_CCER register (falling edge in this case).
 	//Bit 1 CC1P: Capture/Compare 1 configured as input:
 	//This bit selects whether IC1 is used for trigger or capture operations.
 	//0: non-inverted: capture is done on a rising edge of IC1. When used as external trigger, IC1 is non-inverted.
 	//1: inverted: capture is done on a falling edge of IC1. When used as external trigger, IC1 is inverted.
-	TIM_CCER(TIM2) = TIM_CCER_CC1P;
+	TIM_CCER(timer_peripheral) = TIM_CCER_CC1P;
 	//. Program the input prescaler. In our use, we wish the capture to be performed at
 	//each valid transition, so the prescaler is disabled (write IC1PS bits to 00 in the
 	//TIMx_CCMR1 register).
@@ -214,7 +212,7 @@ void prepares_capture(uint32_t timer_peripheral)
 	//01: capture is done once every 2 events
 	//10: capture is done once every 4 events
 	//11: capture is done once every 8 events
-	TIM_CCMR1(TIM2) &= (TIM_CCMR1_IC1F_OFF | 0b11110011); //No prescaler and no filter, sampling is done at fDTS
+	TIM_CCMR1(timer_peripheral) &= (TIM_CCMR1_IC1F_OFF | 0b11110011); //No prescaler and no filter, sampling is done at fDTS
 
 	//Reenable TIM2 as Capture Timer:
 	//Enable capture from the counter into the capture register by setting the CC1E bit in the TIMx_CCER register.
@@ -235,7 +233,7 @@ void prepares_capture(uint32_t timer_peripheral)
 	state_overflow_tim2 = TIME_CAPTURE;
 
 	//Clear TIM2_CR1_URS;
-	TIM_CR1(TIM2) &= ~TIM_CR1_URS;
+	TIM_CR1(timer_peripheral) &= ~TIM_CR1_URS;
 
 	//Counter enable
 	//timer_enable_counter(timer_peripheral);
@@ -269,7 +267,7 @@ void tim2_isr(void)
 			}
 			case SEND_ST_BIT:
 			{
-				send_start_bit();
+				send_start_bit_now();
 				break;
 			}	
 			case SEND_ST_BIT_2:
